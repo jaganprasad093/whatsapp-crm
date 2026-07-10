@@ -16,11 +16,7 @@ import {
 } from "@/components/ui/card";
 import { MessageSquare, UsersRound } from "lucide-react";
 
-// `useSearchParams` opts the component out of static prerendering
-// unless it sits under a Suspense boundary. We split the form into
-// a child component so the outer page can prerender the chrome
-// (background, card frame) while the form hydrates with the query
-// string on the client.
+
 export default function LoginPage() {
   return (
     <Suspense fallback={null}>
@@ -31,9 +27,6 @@ export default function LoginPage() {
 
 function LoginPageInner() {
   const searchParams = useSearchParams();
-  // Forwarded from `/join/<token>` when the visitor already has an
-  // account. After a successful sign-in we send them to the join
-  // page to accept rather than to /dashboard.
   const inviteToken = searchParams.get("invite");
 
   const [email, setEmail] = useState("");
@@ -47,7 +40,7 @@ function LoginPageInner() {
     e.preventDefault();
     setError(null);
     setLoading(true);
-
+    
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
